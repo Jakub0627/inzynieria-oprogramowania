@@ -10,11 +10,18 @@ import numpy as np
 import threading
 import datetime
 from scipy.optimize import minimize
+from dotenv import load_dotenv
+import os
+
 
 # ===============================
 # Konfiguracja kluczowych danych
 # ===============================
-CRYPTOCOMPARE_API_KEY = ''
+
+load_dotenv()
+CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 
 # ===============================
