@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wykres dla {{ symbol }}</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Strona główna</a> |
+        <a href="{{ url_for('add_crypto') }}">➕ Dodaj kryptowalutę</a> |
+        <a href="{{ url_for('portfolio_view') }}">📋 Portfel</a> |
+        <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
+        <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
+        <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
+        <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
+    </nav>
+    <hr>
+    <h1>Wykres dla {{ symbol }}</h1>
+    <img src="data:image/png;base64,{{ image_base64 }}" alt="Wykres {{ symbol }}">
+    <br><br>
+    <a href="{{ url_for('chart_redirect') }}">Wybierz inną kryptowalutę</a>
+</body>
+</html>

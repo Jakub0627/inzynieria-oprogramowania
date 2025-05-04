@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Twój portfel</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Strona główna</a> |
+        <a href="{{ url_for('add_crypto') }}">➕ Dodaj kryptowalutę</a> |
+        <a href="{{ url_for('portfolio_view') }}">📋 Portfel</a> |
+        <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
+        <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
+        <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
+        <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
+    </nav>
+    <hr>
+
+    <h1>Twój portfel</h1>
+    <table border="1">
+        <tr>
+            <th>Kryptowaluta</th>
+            <th>Ilość</th>
+            <th>Cena (USD)</th>
+            <th>Wartość</th>
+        </tr>
+        {% for asset in assets %}
+        <tr>
+            <td>{{ asset.crypto_name }}</td>
+            <td>{{ asset.amount }}</td>
+            <td>{{ asset.price }}</td>
+            <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p><strong>Wartość całkowita:</strong> {{ "%.2f"|format(total_value) }} USD</p>
+</body>
+</html>

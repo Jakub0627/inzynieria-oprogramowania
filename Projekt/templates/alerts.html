@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Powiadomienia o cenach</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">🏠 Strona główna</a> |
+        <a href="{{ url_for('add_crypto') }}">➕ Dodaj kryptowalutę</a> |
+        <a href="{{ url_for('portfolio_view') }}">📋 Portfel</a> |
+        <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
+        <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
+        <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
+        <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
+    </nav>
+    <hr>
+
+    <h1>Sprawdź próg cenowy</h1>
+    <form method="post">
+        <label for="crypto">Symbol kryptowaluty (np. BTC):</label>
+        <input type="text" name="crypto" id="crypto" required><br><br>
+
+        <label for="threshold">Próg cenowy (USD):</label>
+        <input type="number" name="threshold" id="threshold" step="any" required><br><br>
+
+        <button type="submit">Sprawdź</button>
+    </form>
+
+    {% if message %}
+        <p><strong>{{ message }}</strong></p>
+    {% endif %}
+</body>
+</html>
