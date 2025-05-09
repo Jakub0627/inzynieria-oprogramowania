@@ -5,6 +5,8 @@ import datetime
 from scipy.optimize import minimize
 from dotenv import load_dotenv
 import os
+import smtplib
+from email.mime.text import MIMEText
 
 load_dotenv()
 CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY")
@@ -177,3 +179,26 @@ class Portfolio:
         moving_average = np.convolve(prices, np.ones(window), 'valid') / window
         padding = [np.nan] * (window - 1)
         return padding + list(moving_average)
+
+    @staticmethod
+    def send_email_alert(subject, body):
+        smtp_server = os.getenv("SMTP_SERVER")
+        smtp_port = int(os.getenv("SMTP_PORT", 587))
+        smtp_user = os.getenv("SMTP_USERNAME")
+        smtp_pass = os.getenv("SMTP_PASSWORD")
+        recipient = os.getenv("ALERT_EMAIL")
+
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = smtp_user
+        msg["To"] = recipient
+
+        try:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.sendmail(smtp_user, recipient, msg.as_string())
+            return True
+        except Exception as e:
+            print(f"Błąd SMTP: {e}")
+            return False

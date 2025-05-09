@@ -18,28 +18,65 @@
 
     <h1>Twój portfel</h1>
     <table border="1">
-    <tr>
-        <th>Kryptowaluta</th>
-        <th>Ilość</th>
-        <th>Cena (USD)</th>
-        <th>Wartość</th>
-        <th>Akcje</th>
-    </tr>
-    {% for asset in assets %}
-    <tr>
-        <td>{{ asset.crypto_name }}</td>
-        <td>{{ asset.amount }}</td>
-        <td>{{ asset.price }}</td>
-        <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
-        <td>
-            <form action="{{ url_for('delete_asset', symbol=asset.crypto_name) }}" method="post" style="display:inline;">
-                <input type="number" name="amount" step="any" min="0.00000001" max="{{ asset.amount }}" required>
-                <button type="submit">Usuń</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-    <p><strong>Wartość całkowita:</strong> {{ "%.2f"|format(total_value) }} USD</p>
+        <thead>
+            <tr>
+                <th>Kryptowaluta</th>
+                <th>Ilość</th>
+                <th>Cena (USD)</th>
+                <th>Wartość</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in assets %}
+            <tr>
+                <td>{{ asset.crypto_name }}</td>
+                <td>{{ asset.amount }}</td>
+                <td>{{ asset.price }}</td>
+                <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
+                <td>
+                    <form action="{{ url_for('delete_asset', symbol=asset.crypto_name) }}" method="post">
+                        <input type="number" name="amount" step="any" min="0.00000001" max="{{ asset.amount }}" required>
+                        <button type="submit">Usuń</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>Wartość całkowita:</strong> <span id="total-value">{{ "%.2f"|format(total_value) }} USD</span></p>
+
+    <script>
+        function updatePortfolioTable() {
+            fetch("/api/portfolio")
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("table tbody");
+                    tbody.innerHTML = "";
+
+                    data.assets.forEach(asset => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${asset.crypto_name}</td>
+                            <td>${asset.amount}</td>
+                            <td>${asset.price.toFixed(2)}</td>
+                            <td>${asset.value.toFixed(2)}</td>
+                            <td>
+                                <form action="/delete/${asset.crypto_name}" method="post">
+                                    <input type="number" name="amount" step="any" min="0.00000001" max="${asset.amount}" required>
+                                    <button type="submit">Usuń</button>
+                                </form>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    document.getElementById("total-value").innerText = data.total_value.toFixed(2) + " USD";
+                });
+        }
+
+        setInterval(updatePortfolioTable, 5000);
+    </script>
 </body>
 </html>

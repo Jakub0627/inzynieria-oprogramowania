@@ -5,6 +5,7 @@ import io
 from dotenv import load_dotenv
 import base64
 from matplotlib.figure import Figure
+from flask import jsonify
 
 load_dotenv()
 CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY")
@@ -15,6 +16,23 @@ portfolio = Portfolio()
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/api/portfolio")
+def api_portfolio():
+    portfolio.update_prices()
+    data = [
+        {
+            "crypto_name": asset["crypto_name"],
+            "amount": asset["amount"],
+            "price": asset["price"],
+            "value": asset["amount"] * asset["price"]
+        }
+        for asset in portfolio.assets
+    ]
+    return jsonify({
+        "assets": data,
+        "total_value": portfolio.total_value
+    })
 
 @app.route("/add", methods=["GET", "POST"])
 def add_crypto():
@@ -115,9 +133,11 @@ def alerts_view():
             threshold = float(request.form.get("threshold"))
             price = Portfolio.get_current_price(symbol, CRYPTOCOMPARE_API_KEY)
             if price > threshold:
-                message = f"✅ Cena {symbol} przekroczyła {threshold} USD – obecnie: {price:.2f} USD."
+                body = f"Cena {symbol} przekroczyła {threshold} USD i wynosi {price:.2f} USD."
+                sent = Portfolio.send_email_alert(f"Alert cenowy: {symbol}", body)
+                message = f"✅ {body} E-mail {'wysłany' if sent else 'nie wysłano'}."
             else:
-                message = f"ℹ️ Cena {symbol} jest poniżej progu {threshold} USD – obecnie: {price:.2f} USD."
+                message = f"ℹ️ Cena {symbol} jest poniżej progu {threshold} USD (obecnie {price:.2f} USD)."
         except ValueError:
             message = "⚠️ Nieprawidłowy próg cenowy. Wprowadź liczbę."
 
