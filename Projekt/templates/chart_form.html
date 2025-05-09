@@ -19,7 +19,12 @@
     <h1>Wybierz kryptowalutę do analizy</h1>
     <form method="post">
         <label for="crypto">Symbol (np. BTC):</label>
-        <input type="text" name="crypto" id="crypto" required>
+        <input type="text" name="crypto" list="symbol-list" id="crypto" required>
+            <datalist id="symbol-list">
+                {% for symbol in symbols %}
+                    <option value="{{ symbol }}">
+                {% endfor %}
+            </datalist>
         <button type="submit">Zobacz wykres</button>
     </form>
 </body>

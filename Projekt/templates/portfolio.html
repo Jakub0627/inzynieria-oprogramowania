@@ -18,21 +18,28 @@
 
     <h1>Twój portfel</h1>
     <table border="1">
-        <tr>
-            <th>Kryptowaluta</th>
-            <th>Ilość</th>
-            <th>Cena (USD)</th>
-            <th>Wartość</th>
-        </tr>
-        {% for asset in assets %}
-        <tr>
-            <td>{{ asset.crypto_name }}</td>
-            <td>{{ asset.amount }}</td>
-            <td>{{ asset.price }}</td>
-            <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <tr>
+        <th>Kryptowaluta</th>
+        <th>Ilość</th>
+        <th>Cena (USD)</th>
+        <th>Wartość</th>
+        <th>Akcje</th>
+    </tr>
+    {% for asset in assets %}
+    <tr>
+        <td>{{ asset.crypto_name }}</td>
+        <td>{{ asset.amount }}</td>
+        <td>{{ asset.price }}</td>
+        <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
+        <td>
+            <form action="{{ url_for('delete_asset', symbol=asset.crypto_name) }}" method="post" style="display:inline;">
+                <input type="number" name="amount" step="any" min="0.00000001" max="{{ asset.amount }}" required>
+                <button type="submit">Usuń</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
     <p><strong>Wartość całkowita:</strong> {{ "%.2f"|format(total_value) }} USD</p>
 </body>
 </html>

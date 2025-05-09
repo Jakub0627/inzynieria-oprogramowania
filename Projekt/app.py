@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from Krypto import Portfolio
+from portfolio import Portfolio
 import os
 import io
 from dotenv import load_dotenv
@@ -18,14 +18,23 @@ def index():
 
 @app.route("/add", methods=["GET", "POST"])
 def add_crypto():
+    crypto_list = Portfolio.get_crypto_list(CRYPTOCOMPARE_API_KEY)
     if request.method == "POST":
         symbol = request.form.get("crypto").upper()
         amount = float(request.form.get("amount"))
         price = Portfolio.get_current_price(symbol, CRYPTOCOMPARE_API_KEY)
         portfolio.add_asset(symbol, amount, price)
         return redirect(url_for("portfolio_view"))
-    return render_template("add.html")
+    return render_template("add.html", crypto_list=crypto_list)
 
+@app.route("/delete/<symbol>", methods=["POST"])
+def delete_asset(symbol):
+    try:
+        amount = float(request.form.get("amount"))
+        portfolio.remove_asset(symbol.upper(), amount)
+    except (ValueError, TypeError):
+        pass
+    return redirect(url_for("portfolio_view"))
 
 @app.route("/portfolio")
 def portfolio_view():
@@ -36,7 +45,9 @@ def chart_redirect():
     if request.method == "POST":
         symbol = request.form.get("crypto").upper()
         return redirect(url_for("chart_view", symbol=symbol))
-    return render_template("chart_form.html")
+    symbols_in_portfolio = [asset['crypto_name'] for asset in portfolio.assets]
+    return render_template("chart_form.html", symbols=symbols_in_portfolio)
+
 
 @app.route("/chart/<symbol>")
 def chart_view(symbol):

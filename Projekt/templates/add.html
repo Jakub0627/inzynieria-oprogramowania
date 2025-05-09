@@ -18,7 +18,13 @@
     <h1>Dodaj kryptowalutę</h1>
     <form method="post">
         <label for="crypto">Symbol kryptowaluty (np. BTC):</label>
-        <input type="text" name="crypto" required><br><br>
+        <input type="text" name="crypto" list="crypto-list" id="crypto" required>
+
+        <datalist id="crypto-list">
+            {% for symbol in crypto_list %}
+                <option value="{{ symbol }}">
+            {% endfor %}
+        </datalist>
 
         <label for="amount">Ilość:</label>
         <input type="number" name="amount" step="any" required><br><br>
