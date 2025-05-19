@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Prognoza portfela{% endblock %}
+{% block title %}Prognoza wartości portfela{% endblock %}
 
 {% block content %}
-<h1>📊 Prognoza wartości portfela</h1>
-
-<p id="loading">⏳ Ładowanie...</p>
+<h1>Prognoza wartości portfela</h1>
 
 <table border="1">
-  <thead>
-    <tr>
-      <th>Dni</th>
-      <th>Przewidywana wartość (USD)</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+    <thead>
+        <tr>
+            <th>Dni</th>
+            <th>Prognozowana wartość (USD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in forecast %}
+        <tr>
+            <td>{{ row.day }}</td>
+            <td>{{ "%.2f"|format(row.value) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-
-{% endblock %}
-
-{% block scripts %}
-<script type="module" src="{{ url_for('static', filename='forecast.js') }}"></script>
 {% endblock %}

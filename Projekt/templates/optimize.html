@@ -3,12 +3,18 @@
 {% block title %}Optymalizacja portfela{% endblock %}
 
 {% block content %}
-<h1>⚙️ Optymalizacja portfela – Model Markowitza</h1>
+<h1>Optymalizacja portfela</h1>
 
-<p id="loading">⏳ Ładowanie...</p>
-<ul id="suggestions"></ul>
-{% endblock %}
+<form method="post">
+    <button type="submit">Uruchom optymalizację Markowitza</button>
+</form>
 
-{% block scripts %}
-<script type="module" src="{{ url_for('static', filename='optimize.js') }}"></script>
+{% if suggestions %}
+    <h2>Wyniki:</h2>
+    <ul>
+        {% for suggestion in suggestions %}
+            <li>{{ suggestion }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

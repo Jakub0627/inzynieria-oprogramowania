@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Aplikacja kryptowalut{% endblock %}</title>
-
-    <!-- Zewnętrzny arkusz stylów -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -14,28 +11,13 @@
     <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
     <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
     <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
-    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a> |
-
-    <span id="login-link">
-        <a href="{{ url_for('login_page') }}">🔐 Zaloguj się</a>
-    </span>
-
-    <span id="logout-button" style="display: none;">
-        <button onclick="logout()">🚪 Wyloguj się</button>
-    </span>
-
-    <span id="user-info" style="margin-left: 20px; font-weight: bold;"></span>
+    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
 </nav>
-
 <hr>
 
-{% block content %}{% endblock %}
-
-<!-- Firebase JS SDK + logika aplikacji -->
-<script type="module" src="{{ url_for('static', filename='firebase.js') }}"></script>
-
-<!-- Miejsce na skrypty specyficzne dla podstron -->
-{% block scripts %}{% endblock %}
+{% block content %}
+<!-- zawartość strony -->
+{% endblock %}
 
 </body>
 </html>
