@@ -1,91 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}Panel portfela{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1>Dodaj kryptowalutę do portfela</h1>
-<form method="post">
+<h1>Twój portfel</h1>
+
+<form id="add-form">
     <label for="crypto">Symbol:</label>
-    <input type="text" name="crypto" list="crypto-list" id="crypto" required>
+    <input type="text" name="crypto" id="crypto" list="crypto-list" required>
     <datalist id="crypto-list">
-        {% for symbol in crypto_list %}
-        <option value="{{ symbol }}">
-        {% endfor %}
+        <!-- Można uzupełniać z JavaScript -->
     </datalist>
-    <br><br>
 
     <label for="amount">Ilość:</label>
-    <input type="number" step="any" name="amount" id="amount" required>
-    <br><br>
+    <input type="number" name="amount" id="amount" step="any" required>
 
     <button type="submit">Dodaj</button>
 </form>
 
 <hr>
-<h2>Twój portfel</h2>
-<table border="1">
-    <thead>
+
+<h2>Portfel</h2>
+<table border="1" id="portfolio-table">
+  <thead>
     <tr>
-        <th>Kryptowaluta</th>
-        <th>Ilość</th>
-        <th>Cena (USD)</th>
-        <th>Wartość</th>
-        <th>Akcje</th>
+      <th>Kryptowaluta</th>
+      <th>Ilość</th>
+      <th>Cena</th>
+      <th>Wartość</th>
+      <th>Akcje</th>
     </tr>
-    </thead>
-    <tbody>
-    {% for asset in assets %}
-    <tr>
-        <td>{{ asset.crypto_name }}</td>
-        <td>{{ asset.amount }}</td>
-        <td>{{ asset.price }}</td>
-        <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
-        <td>
-            <form action="{{ url_for('delete_asset', symbol=asset.crypto_name) }}" method="post">
-                <input type="number" name="amount" step="any" min="0.00000001" max="{{ asset.amount }}" required>
-                <button type="submit">Usuń</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
+  </thead>
+  <tbody>
+    <!-- ładowane dynamicznie -->
+  </tbody>
 </table>
 
-<p><strong>Wartość całkowita:</strong> <span id="total-value">{{ "%.2f"|format(total_value) }} USD</span></p>
+<p><strong>Wartość całkowita:</strong> <span id="total-value">0.00 USD</span></p>
 
-<script>
-function updatePortfolioTable() {
-    fetch("/api/portfolio")
-        .then(res => res.json())
-        .then(data => {
-            const tbody = document.querySelector("table tbody");
-            tbody.innerHTML = "";
-
-            data.assets.forEach(asset => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${asset.crypto_name}</td>
-                    <td>${asset.amount}</td>
-                    <td>${asset.price.toFixed(2)}</td>
-                    <td>${asset.value.toFixed(2)}</td>
-                    <td>
-                        <form action="/delete/${asset.crypto_name}" method="post">
-                            <input type="number" name="amount" step="any" min="0.00000001" max="${asset.amount}" required>
-                            <button type="submit">Usuń</button>
-                        </form>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            const total = document.getElementById("total-value");
-            if (total) {
-                total.textContent = data.total_value.toFixed(2) + " USD";
-            }
-        });
-}
-
-// Auto-refresh co 10 sekund
-setInterval(updatePortfolioTable, 10000);
-</script>
+<script type="module" src="{{ url_for('static', filename='dashboard.js') }}"></script>
 {% endblock %}
