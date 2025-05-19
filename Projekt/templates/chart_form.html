@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Wybierz kryptowalutę</title>
-</head>
-<body>
-    <nav>
-    <a href="{{ url_for('dashboard') }}">📋 Portfel</a> |
-    <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
-    <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
-    <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
-    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
-    </nav>
+{% extends "base.html" %}
 
-    <hr>
+{% block title %}Wybór kryptowaluty do wykresu{% endblock %}
 
-    <h1>Wybierz kryptowalutę do analizy</h1>
-    <form method="post">
-        <label for="crypto">Symbol (np. BTC):</label>
-        <input type="text" name="crypto" list="symbol-list" id="crypto" required>
-            <datalist id="symbol-list">
-                {% for symbol in symbols %}
-                    <option value="{{ symbol }}">
-                {% endfor %}
-            </datalist>
-        <button type="submit">Zobacz wykres</button>
-    </form>
-</body>
-</html>
+{% block content %}
+<h1>Wybierz kryptowalutę</h1>
+
+<form method="post">
+    <label for="crypto">Symbol kryptowaluty:</label>
+    <input type="text" name="crypto" id="crypto" required>
+    <br><br>
+    <button type="submit">Pokaż wykres</button>
+</form>
+{% endblock %}

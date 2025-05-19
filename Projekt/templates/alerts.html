@@ -1,33 +1,23 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Powiadomienia o cenach</title>
-</head>
-<body>
-    <nav>
-    <a href="{{ url_for('dashboard') }}">📋 Portfel</a> |
-    <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
-    <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
-    <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
-    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
-    </nav>
+{% extends "base.html" %}
 
-    <hr>
+{% block title %}Powiadomienia cenowe{% endblock %}
 
-    <h1>Sprawdź próg cenowy</h1>
-    <form method="post">
-        <label for="crypto">Symbol kryptowaluty (np. BTC):</label>
-        <input type="text" name="crypto" id="crypto" required><br><br>
+{% block content %}
+<h1>Ustaw powiadomienie o cenie</h1>
 
-        <label for="threshold">Próg cenowy (USD):</label>
-        <input type="number" name="threshold" id="threshold" step="any" required><br><br>
+<form method="post">
+    <label for="crypto">Kryptowaluta (symbol):</label>
+    <input type="text" name="crypto" id="crypto" required>
+    <br><br>
 
-        <button type="submit">Sprawdź</button>
-    </form>
+    <label for="threshold">Próg cenowy (USD):</label>
+    <input type="number" name="threshold" id="threshold" step="any" required>
+    <br><br>
 
-    {% if message %}
-        <p><strong>{{ message }}</strong></p>
-    {% endif %}
-</body>
-</html>
+    <button type="submit">Ustaw powiadomienie</button>
+</form>
+
+{% if message %}
+    <p><strong>{{ message }}</strong></p>
+{% endif %}
+{% endblock %}

@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel portfela</title>
-</head>
-<body>
-<nav>
-    <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
-    <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
-    <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
-    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
-</nav>
-<hr>
+{% extends "base.html" %}
 
+{% block title %}Panel portfela{% endblock %}
+
+{% block content %}
 <h1>Dodaj kryptowalutę do portfela</h1>
 <form method="post">
     <label for="crypto">Symbol:</label>
@@ -61,7 +51,41 @@
     </tbody>
 </table>
 
-<p><strong>Wartość całkowita:</strong> {{ "%.2f"|format(total_value) }} USD</p>
+<p><strong>Wartość całkowita:</strong> <span id="total-value">{{ "%.2f"|format(total_value) }} USD</span></p>
 
-</body>
-</html>
+<script>
+function updatePortfolioTable() {
+    fetch("/api/portfolio")
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.querySelector("table tbody");
+            tbody.innerHTML = "";
+
+            data.assets.forEach(asset => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${asset.crypto_name}</td>
+                    <td>${asset.amount}</td>
+                    <td>${asset.price.toFixed(2)}</td>
+                    <td>${asset.value.toFixed(2)}</td>
+                    <td>
+                        <form action="/delete/${asset.crypto_name}" method="post">
+                            <input type="number" name="amount" step="any" min="0.00000001" max="${asset.amount}" required>
+                            <button type="submit">Usuń</button>
+                        </form>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const total = document.getElementById("total-value");
+            if (total) {
+                total.textContent = data.total_value.toFixed(2) + " USD";
+            }
+        });
+}
+
+// Auto-refresh co 10 sekund
+setInterval(updatePortfolioTable, 10000);
+</script>
+{% endblock %}

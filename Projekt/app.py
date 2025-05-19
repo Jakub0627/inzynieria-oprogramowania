@@ -87,10 +87,13 @@ def chart_view(symbol):
 
     return render_template("chart.html", symbol=symbol, image_base64=image_base64)
 
-@app.route("/optimize")
+@app.route("/optimize", methods=["GET", "POST"])
 def optimize_view():
-    suggestions = portfolio.optimize_portfolio()
+    suggestions = []
+    if request.method == "POST":
+        suggestions = portfolio.optimize_portfolio()
     return render_template("optimize.html", suggestions=suggestions)
+
 
 @app.route("/forecast")
 def forecast_view():
@@ -124,6 +127,23 @@ def alerts_view():
             message = "⚠️ Nieprawidłowy próg cenowy. Wprowadź liczbę."
 
     return render_template("alerts.html", message=message)
+
+@app.route("/api/portfolio")
+def api_portfolio():
+    portfolio.update_prices()
+    data = [
+        {
+            "crypto_name": asset["crypto_name"],
+            "amount": asset["amount"],
+            "price": asset["price"],
+            "value": asset["amount"] * asset["price"]
+        }
+        for asset in portfolio.assets
+    ]
+    return jsonify({
+        "assets": data,
+        "total_value": portfolio.total_value
+    })
 
 
 if __name__ == "__main__":
