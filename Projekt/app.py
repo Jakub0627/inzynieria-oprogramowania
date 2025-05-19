@@ -13,37 +13,19 @@ CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY")
 app = Flask(__name__)
 portfolio = Portfolio()
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/api/portfolio")
-def api_portfolio():
-    portfolio.update_prices()
-    data = [
-        {
-            "crypto_name": asset["crypto_name"],
-            "amount": asset["amount"],
-            "price": asset["price"],
-            "value": asset["amount"] * asset["price"]
-        }
-        for asset in portfolio.assets
-    ]
-    return jsonify({
-        "assets": data,
-        "total_value": portfolio.total_value
-    })
-
-@app.route("/add", methods=["GET", "POST"])
-def add_crypto():
+@app.route("/", methods=["GET", "POST"])
+def dashboard():
     crypto_list = Portfolio.get_crypto_list(CRYPTOCOMPARE_API_KEY)
+
     if request.method == "POST":
         symbol = request.form.get("crypto").upper()
         amount = float(request.form.get("amount"))
         price = Portfolio.get_current_price(symbol, CRYPTOCOMPARE_API_KEY)
         portfolio.add_asset(symbol, amount, price)
-        return redirect(url_for("portfolio_view"))
-    return render_template("add.html", crypto_list=crypto_list)
+        return redirect(url_for("dashboard"))
+
+    return render_template("dashboard.html", assets=portfolio.assets, total_value=portfolio.total_value, crypto_list=crypto_list)
+
 
 @app.route("/delete/<symbol>", methods=["POST"])
 def delete_asset(symbol):

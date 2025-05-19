@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel portfela</title>
+</head>
+<body>
+<nav>
+    <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
+    <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
+    <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
+    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a>
+</nav>
+<hr>
+
+<h1>Dodaj kryptowalutę do portfela</h1>
+<form method="post">
+    <label for="crypto">Symbol:</label>
+    <input type="text" name="crypto" list="crypto-list" id="crypto" required>
+    <datalist id="crypto-list">
+        {% for symbol in crypto_list %}
+        <option value="{{ symbol }}">
+        {% endfor %}
+    </datalist>
+    <br><br>
+
+    <label for="amount">Ilość:</label>
+    <input type="number" step="any" name="amount" id="amount" required>
+    <br><br>
+
+    <button type="submit">Dodaj</button>
+</form>
+
+<hr>
+<h2>Twój portfel</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Kryptowaluta</th>
+        <th>Ilość</th>
+        <th>Cena (USD)</th>
+        <th>Wartość</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assets %}
+    <tr>
+        <td>{{ asset.crypto_name }}</td>
+        <td>{{ asset.amount }}</td>
+        <td>{{ asset.price }}</td>
+        <td>{{ "%.2f"|format(asset.amount * asset.price) }}</td>
+        <td>
+            <form action="{{ url_for('delete_asset', symbol=asset.crypto_name) }}" method="post">
+                <input type="number" name="amount" step="any" min="0.00000001" max="{{ asset.amount }}" required>
+                <button type="submit">Usuń</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Wartość całkowita:</strong> {{ "%.2f"|format(total_value) }} USD</p>
+
+</body>
+</html>
