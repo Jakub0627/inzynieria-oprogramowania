@@ -12,28 +12,25 @@ onAuthStateChanged(auth, async user => {
   }
 
   const token = await user.getIdToken();
+
+  // Przykład działania: fetch alertów z API (stworzyć odpowiednie endpointy)
   try {
-    const res = await fetch("/api/forecast", {
+    const res = await fetch("/api/alerts", {
       headers: {
         Authorization: "Bearer " + token
       }
     });
 
-    if (!res.ok) throw new Error("Błąd pobierania danych");
-
     const data = await res.json();
-    const tbody = document.querySelector("tbody");
-    tbody.innerHTML = "";
-
-    data.forecast.forEach(row => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${row.days}</td><td>${row.value.toFixed(2)} USD</td>`;
-      tbody.appendChild(tr);
+    const container = document.createElement("div");
+    data.alerts.forEach(alert => {
+      const p = document.createElement("p");
+      p.textContent = alert.message;
+      container.appendChild(p);
     });
 
-    document.getElementById("loading").style.display = "none";
+    document.body.appendChild(container);
   } catch (err) {
-    console.error("Błąd:", err);
-    document.getElementById("loading").textContent = "❌ Nie udało się pobrać danych.";
+    console.error("Błąd ładowania alertów:", err);
   }
 });

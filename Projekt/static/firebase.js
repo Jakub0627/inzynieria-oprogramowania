@@ -1,8 +1,4 @@
-// Firebase SDK - CDN wersja ES module
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -10,16 +6,7 @@ import {
   GoogleAuthProvider,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-// Konfiguracja Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyD6UCP3A76kHjwjI4KDSVriDTDP89agIzg",
-  authDomain: "projekt-krypto-8c5d7.firebaseapp.com",
-  projectId: "projekt-krypto-8c5d7",
-  storageBucket: "projekt-krypto-8c5d7.appspot.com",
-  messagingSenderId: "17200369495",
-  appId: "1:17200369495:web:ef2106700b06a9a026f812"
-};
+import { firebaseConfig } from "./firebase-config.js";
 
 // Inicjalizacja
 const app = initializeApp(firebaseConfig);
@@ -48,7 +35,7 @@ onAuthStateChanged(auth, user => {
     if (userInfo) userInfo.textContent = `👤 Zalogowany jako: ${user.email}`;
   }
 
-  // 🛡️ Bezpieczne odświeżanie portfela co 10 sekund
+  // Odświeżanie portfela co 10 sekund, jeśli funkcja istnieje
   setInterval(() => {
     if (auth.currentUser && typeof loadPortfolio === "function") {
       loadPortfolio();
@@ -60,7 +47,7 @@ onAuthStateChanged(auth, user => {
 function login() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
-    .then(result => {
+    .then(() => {
       window.location.href = "/";
     })
     .catch(error => {
@@ -79,5 +66,4 @@ function logout() {
 window.login = login;
 window.logout = logout;
 
-// 📤 Eksport dla dashboard.js
 export { auth };
