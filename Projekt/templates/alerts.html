@@ -1,23 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Powiadomienia cenowe{% endblock %}
+{% block title %}Powiadomienia{% endblock %}
 
 {% block content %}
-<h1>Ustaw powiadomienie o cenie</h1>
+<h1>🔔 Alerty cenowe</h1>
 
-<form method="post">
-    <label for="crypto">Kryptowaluta (symbol):</label>
-    <input type="text" name="crypto" id="crypto" required>
-    <br><br>
+<form id="alert-form">
+  <label for="crypto">Symbol:</label>
+  <input type="text" id="crypto" required>
 
-    <label for="threshold">Próg cenowy (USD):</label>
-    <input type="number" name="threshold" id="threshold" step="any" required>
-    <br><br>
+  <label for="threshold">Próg (USD):</label>
+  <input type="number" id="threshold" step="0.01" required>
 
-    <button type="submit">Ustaw powiadomienie</button>
+  <button type="submit">➕ Dodaj alert</button>
 </form>
 
-{% if message %}
-    <p><strong>{{ message }}</strong></p>
-{% endif %}
+<hr>
+
+<h2>📋 Twoje aktywne alerty</h2>
+
+<p id="status"></p>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Próg (USD)</th>
+      <th>Status</th>
+      <th>Utworzono</th>
+      <th>Usuń</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='alerts.js') }}"></script>
 {% endblock %}
