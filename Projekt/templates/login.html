@@ -3,44 +3,48 @@
 {% block title %}Logowanie{% endblock %}
 
 {% block content %}
-<h1>Zaloguj się</h1>
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+  <h1 class="text-3xl font-bold mb-6">🔐 Zaloguj się</h1>
 
-<div id="login-area">
-    <button onclick="login()">🔐 Zaloguj się przez Google</button>
-</div>
+  <div id="login-area" class="space-y-4">
+    <button onclick="login()"
+            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded shadow transition text-lg">
+      🔑 Zaloguj się przez Google
+    </button>
+  </div>
 
-<div id="user-info" style="display:none;">
-    <p>Zalogowany jako: <span id="user-email"></span></p>
-    <button onclick="logout()">🚪 Wyloguj się</button>
+  <div id="user-info" class="mt-6 hidden space-y-2">
+    <p class="text-sm">Zalogowany jako: <span id="user-email" class="font-semibold text-blue-300"></span></p>
+    <button onclick="logout()"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+      🚪 Wyloguj się
+    </button>
+  </div>
 </div>
 
 <script>
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function login() {
-    firebase.auth().signInWithPopup(provider)
-        .then(result => {
-            const user = result.user;
-            document.getElementById("login-area").style.display = "none";
-            document.getElementById("user-info").style.display = "block";
-            document.getElementById("user-email").textContent = user.email;
-
-            // (opcjonalnie) przekierowanie do dashboardu
-            setTimeout(() => {
-                window.location.href = "/"; 
-            }, 1000);
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Logowanie nie powiodło się.");
-        });
+  firebase.auth().signInWithPopup(provider)
+    .then(result => {
+      const user = result.user;
+      document.getElementById("login-area").style.display = "none";
+      document.getElementById("user-info").style.display = "block";
+      document.getElementById("user-email").textContent = user.email;
+      setTimeout(() => window.location.href = "/", 1000);
+    })
+    .catch(error => {
+      console.error(error);
+      alert("❌ Logowanie nie powiodło się.");
+    });
 }
 
 function logout() {
-    firebase.auth().signOut().then(() => {
-        document.getElementById("login-area").style.display = "block";
-        document.getElementById("user-info").style.display = "none";
-    });
+  firebase.auth().signOut().then(() => {
+    document.getElementById("login-area").style.display = "block";
+    document.getElementById("user-info").style.display = "none";
+  });
 }
 </script>
 {% endblock %}

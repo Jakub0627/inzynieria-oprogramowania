@@ -2,40 +2,36 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Aplikacja kryptowalut{% endblock %}</title>
+    <title>{% block title %}Krypto Aplikacja{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Zewnętrzny arkusz stylów -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
 
-<nav>
-    <a href="{{ url_for('dashboard') }}">📋 Portfel</a> |
-    <a href="{{ url_for('chart_redirect') }}">📈 Wykres</a> |
-    <a href="{{ url_for('forecast_view') }}">📊 Prognoza</a> |
-    <a href="{{ url_for('optimize_view') }}">⚙️ Optymalizacja</a> |
-    <a href="{{ url_for('alerts_view') }}">🔔 Powiadomienia</a> |
+    <!-- Górna nawigacja -->
+    <nav class="bg-gray-800 px-8 py-5 flex items-center justify-between shadow-md text-lg">
+        <div class="space-x-6 font-medium">
+            <a href="{{ url_for('dashboard') }}" class="hover:text-blue-400">📋 Portfel</a>
+            <a href="{{ url_for('analysis_view') }}" class="hover:text-blue-400">📊 Analiza</a>
+            <a href="{{ url_for('alerts_view') }}" class="hover:text-blue-400">🔔 Alerty</a>
+        </div>
 
-    <span id="login-link">
-        <a href="{{ url_for('login_page') }}">🔐 Zaloguj się</a>
-    </span>
+        <div class="space-x-4">
+            <span id="user-info" class="font-semibold"></span>
+            <span id="logout-button" style="display: none;">
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white">🚪 Wyloguj się</button>
+            </span>
+        </div>
+    </nav>
 
-    <span id="logout-button" style="display: none;">
-        <button onclick="logout()">🚪 Wyloguj się</button>
-    </span>
+    <!-- Główna zawartość z marginesami i maksymalną szerokością -->
+    <main class="max-w-6xl mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
 
-    <span id="user-info" style="margin-left: 20px; font-weight: bold;"></span>
-</nav>
-
-<hr>
-
-{% block content %}{% endblock %}
-
-<!-- Firebase JS SDK + logika aplikacji -->
-<script type="module" src="{{ url_for('static', filename='firebase.js') }}"></script>
-
-<!-- Miejsce na skrypty specyficzne dla podstron -->
-{% block scripts %}{% endblock %}
-
+    <script type="module" src="{{ url_for('static', filename='firebase.js') }}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

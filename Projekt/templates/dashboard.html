@@ -3,40 +3,63 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1>Twój portfel</h1>
+<h1 class="text-2xl font-bold mb-6">📋 Twój portfel kryptowalut</h1>
 
-<form id="add-form">
-    <label for="crypto">Symbol:</label>
-    <input type="text" name="crypto" id="crypto" list="crypto-list" required>
-    <datalist id="crypto-list">
-        <!-- Można uzupełniać z JavaScript -->
-    </datalist>
+<form id="add-form" class="bg-gray-800 p-4 rounded shadow mb-6">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex-1">
+      <label for="crypto" class="block mb-1 text-sm">Symbol kryptowaluty:</label>
+      <input type="text" name="crypto" id="crypto" list="crypto-list"
+             required class="bg-gray-700 border border-gray-600 rounded px-3 py-2 w-full">
+      <datalist id="crypto-list">
+        <!-- Uzupełniane przez JS -->
+      </datalist>
+    </div>
 
-    <label for="amount">Ilość:</label>
-    <input type="number" name="amount" id="amount" step="any" required>
+    <div class="flex-1">
+      <label for="amount" class="block mb-1 text-sm">Ilość:</label>
+      <input type="number" name="amount" id="amount" step="any" required
+             class="bg-gray-700 border border-gray-600 rounded px-3 py-2 w-full">
+    </div>
 
-    <button type="submit">Dodaj</button>
+    <div class="flex items-end">
+      <button type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">➕ Dodaj</button>
+    </div>
+  </div>
 </form>
 
-<hr>
+<hr class="my-6 border-gray-600">
 
-<h2>Portfel</h2>
-<table border="1" id="portfolio-table">
-  <thead>
+<h2 class="text-xl font-semibold mb-3">💼 Zawartość portfela</h2>
+
+<table class="table-auto w-full border border-gray-700 text-sm" id="portfolio-table">
+  <thead class="bg-gray-700">
     <tr>
-      <th>Kryptowaluta</th>
-      <th>Ilość</th>
-      <th>Cena</th>
-      <th>Wartość</th>
-      <th>Akcje</th>
+      <th class="px-4 py-2 text-left">Kryptowaluta</th>
+      <th class="px-4 py-2 text-left">Ilość</th>
+      <th class="px-4 py-2 text-left">Cena</th>
+      <th class="px-4 py-2 text-left">Wartość</th>
+      <th class="px-4 py-2 text-left">Akcje</th>
     </tr>
   </thead>
   <tbody>
-    <!-- ładowane dynamicznie -->
+    <!-- dynamicznie ładowane -->
   </tbody>
 </table>
 
-<p><strong>Wartość całkowita:</strong> <span id="total-value">0.00 USD</span></p>
+<p class="mt-4 font-bold">💰 Wartość całkowita: <span id="total-value" class="text-green-400">0.00 USD</span></p>
+{% endblock %}
 
+{% block scripts %}
 <script type="module" src="{{ url_for('static', filename='dashboard.js') }}"></script>
+<script>
+// Efekt fade-in dla nowego wiersza
+function fadeInRow(row) {
+  row.classList.add("opacity-0");
+  row.classList.add("transition-opacity", "duration-500");
+  setTimeout(() => row.classList.remove("opacity-0"), 10);
+}
+window.fadeInRow = fadeInRow;
+</script>
 {% endblock %}

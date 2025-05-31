@@ -1,38 +1,48 @@
 {% extends "base.html" %}
 
-{% block title %}Powiadomienia{% endblock %}
+{% block title %}Alerty cenowe{% endblock %}
 
 {% block content %}
-<h1>🔔 Alerty cenowe</h1>
+<h1 class="text-2xl font-semibold mb-6">🔔 Alerty cenowe</h1>
 
-<form id="alert-form">
-  <label for="crypto">Symbol:</label>
-  <input type="text" id="crypto" required>
-
-  <label for="threshold">Próg (USD):</label>
-  <input type="number" id="threshold" step="0.01" required>
-
-  <button type="submit">➕ Dodaj alert</button>
+<form id="alert-form" class="space-y-4 mb-6 bg-gray-800 p-4 rounded">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div>
+      <label for="crypto" class="block mb-1 text-sm font-medium text-gray-300">Symbol:</label>
+      <input type="text" id="crypto" required
+             class="w-full px-4 py-2 rounded bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring focus:border-blue-400">
+    </div>
+    <div>
+      <label for="threshold" class="block mb-1 text-sm font-medium text-gray-300">Próg (USD):</label>
+      <input type="number" id="threshold" step="0.01" required
+             class="w-full px-4 py-2 rounded bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring focus:border-blue-400">
+    </div>
+    <div class="flex items-end">
+      <button type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+        ➕ Dodaj alert
+      </button>
+    </div>
+  </div>
 </form>
 
-<hr>
+<h2 class="text-xl font-semibold mb-4">📋 Twoje aktywne alerty</h2>
+<p id="status" class="mb-4 text-sm text-yellow-400"></p>
 
-<h2>📋 Twoje aktywne alerty</h2>
-
-<p id="status"></p>
-
-<table border="1">
-  <thead>
-    <tr>
-      <th>Symbol</th>
-      <th>Próg (USD)</th>
-      <th>Status</th>
-      <th>Utworzono</th>
-      <th>Usuń</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<div class="overflow-x-auto">
+  <table class="min-w-full text-sm text-white border border-gray-700">
+    <thead class="bg-gray-700 text-gray-300">
+      <tr>
+        <th class="px-4 py-2 text-center">Symbol</th>
+        <th class="px-4 py-2 text-center">Próg (USD)</th>
+        <th class="px-4 py-2 text-center">Status</th>
+        <th class="px-4 py-2 text-center">Utworzono</th>
+        <th class="px-4 py-2 text-center">🗑️</th>
+      </tr>
+    </thead>
+    <tbody class="text-center"></tbody>
+  </table>
+</div>
 {% endblock %}
 
 {% block scripts %}

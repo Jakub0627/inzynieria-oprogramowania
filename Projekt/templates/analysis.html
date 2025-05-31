@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Analiza portfela{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-6">📊 Analiza portfela</h1>
+
+<!-- 🔍 Sekcja wykresu -->
+<form id="symbol-form" class="mb-6 flex gap-4 items-end">
+  <div>
+    <label for="symbol" class="block mb-1 text-sm">Symbol kryptowaluty:</label>
+    <input type="text" id="symbol" required class="px-4 py-2 rounded bg-gray-800 text-white border border-gray-600" />
+  </div>
+  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Pokaż wykres</button>
+</form>
+
+<div id="chart-container" class="mb-8">
+  <img id="chart-image" class="w-full max-w-3xl mx-auto hidden" alt="Wykres" />
+</div>
+
+<!-- 📈 Sekcja prognozy -->
+<h2 class="text-xl font-semibold mb-2">📅 Prognoza wartości portfela</h2>
+<p id="forecast-loading" class="mb-4 text-sm text-yellow-300">⏳ Ładowanie prognozy...</p>
+<table class="min-w-full text-sm text-white border border-gray-700 mb-8">
+  <thead class="bg-gray-700">
+    <tr>
+      <th class="px-4 py-2">Dni</th>
+      <th class="px-4 py-2">Przewidywana wartość (USD)</th>
+    </tr>
+  </thead>
+  <tbody id="forecast-table" class="text-center"></tbody>
+</table>
+
+<!-- 🧠 Sekcja optymalizacji -->
+<h2 class="text-xl font-semibold mb-2">⚙️ Rekomendacje optymalizacyjne</h2>
+<p id="optimize-loading" class="text-yellow-300">⏳ Ładowanie rekomendacji...</p>
+<ul id="optimize-list" class="list-disc ml-5 mt-2 space-y-1"></ul>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='analysis.js') }}"></script>
+{% endblock %}

@@ -148,6 +148,10 @@ def login_page():
 def dashboard():
     return render_template("dashboard.html")
 
+@app.route("/analysis")
+def analysis_view():
+    return render_template("analysis.html")
+
 @app.route("/chart", methods=["GET", "POST"])
 def chart_redirect():
     if request.method == "POST":
@@ -187,7 +191,10 @@ def chart_view(symbol):
     image_base64 = base64.b64encode(buf.read()).decode("utf-8")
     buf.close()
 
-    return render_template("chart.html", symbol=symbol, image_base64=image_base64)
+    return jsonify({
+        "symbol": symbol,
+        "image_base64": image_base64
+    })
 
 # API endpoints
 
